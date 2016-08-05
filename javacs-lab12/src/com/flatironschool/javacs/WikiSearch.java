@@ -60,8 +60,18 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch or(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+      Map<String, Integer> result = new HashMap();
+      for(String url: this.map.keySet()) {
+          System.out.println("Iterating through url: " + url);
+          result.put(url, this.map.get(url));
+      }
+      for(String url: that.map.keySet()) {
+          result.put(url, that.map.get(url));
+          if(this.map.containsKey(url)) {
+              result.put(url, this.map.get(url) + that.map.get(url));
+          }
+      }
+      return new WikiSearch(result);
 	}
 	
 	/**
@@ -71,8 +81,13 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch and(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+      Map<String, Integer> result = new HashMap();
+      for(String url: this.map.keySet()) {
+          if(that.map.containsKey(url)) {
+              result.put(url, this.map.get(url) + that.map.get(url));
+          }
+      }
+      return new WikiSearch(result);
 	}
 	
 	/**
@@ -83,7 +98,13 @@ public class WikiSearch {
 	 */
 	public WikiSearch minus(WikiSearch that) {
         // FILL THIS IN!
-		return null;
+      Map<String, Integer> result = new HashMap();
+      for(String url: this.map.keySet()) {
+          if(!that.map.containsKey(url)) {
+              result.put(url, this.map.get(url));
+          }
+      }
+      return new WikiSearch(result);
 	}
 	
 	/**
@@ -103,9 +124,18 @@ public class WikiSearch {
 	 * 
 	 * @return List of entries with URL and relevance.
 	 */
-	public List<Entry<String, Integer>> sort() {
-        // FILL THIS IN!
-		return null;
+    public List<Entry<String, Integer>> sort() {
+        List<Entry<String, Integer>> results = new LinkedList<Entry<String, Integer>>(this.map.entrySet());
+        System.out.println("results is: " + results);
+        Comparator<Entry<String, Integer>> EntryComparator = new Comparator<Entry<String, Integer>>() {
+                @Override
+                public int compare(Entry<String, Integer> entry1, Entry<String, Integer> entry2) {
+                    return entry1.getValue().compareTo(entry2.getValue());
+                }
+            };
+        Collections.sort(results, EntryComparator);
+        return results;
+
 	}
 
 	/**
